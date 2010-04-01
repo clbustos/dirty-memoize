@@ -40,7 +40,7 @@ module DirtyMemoize
         sym=sym.to_s+"="
         alias_method((sym.to_s+"_whitout_dirty").intern, sym)
         define_method(sym) do |*args|
-          @dirty=true
+          @dirty=:true
           send(sym.to_s+"_whitout_dirty", *args)
         end
       end
@@ -59,7 +59,7 @@ module DirtyMemoize
             end
             @compute_count||=0
             @compute_count+=1
-            @dirty=false
+            @dirty=:false
           end
           @cache[sym]||=Hash.new
           @cache[sym][args]||=send(sym.to_s+"_without_dirty", *args)
@@ -69,8 +69,8 @@ module DirtyMemoize
   end # end of ClassMethods
   # Is the object dirty?
   def dirty?
-    @dirty=true if @dirty.nil?
-    @dirty
+    @dirty||=:true
+    @dirty==:true
   end
   # Number of compute's runs
   def compute_count
@@ -78,7 +78,7 @@ module DirtyMemoize
   end
   def clean_cache
     @cache=Hash.new
-    @dirty=true
+    @dirty=:true
   end
   
 end
