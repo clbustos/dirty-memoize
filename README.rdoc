@@ -1,16 +1,36 @@
 = dirty-memoize
 
-Description goes here.
+Like Memoize, but designed for mutable and parametizable objects
 
-== Note on Patches/Pull Requests
+Use when: 
+1. You have one expensive method (\compute) which set many internal
+variables. So, is preferable lazy evaluation of these dependent variables.
+2. The expensive operation depends on one or more parameters
+3. Changes on one or more parameters affect all dependent variables
+4. You may want to hide the call of 'compute' operation
+5. The user could want test several different parameters values
+
+By default, the method to compute should be called \#compute. 
+Set constant DIRTY_COMPUTE to the name of other method if you need it
+
+Example:
  
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+  class ExpensiveCalculation
+   include DirtyMemoize
+   attr_reader :a
+   attr_accesor :x
+   # Your evil function
+   def compute
+     @a=x**x**x
+   end
+  end
+  a=new ExpensiveCalculation
+  a.x=1
+  puts a.a
+
+== Sugestions
+
+* Fork, modify and do wathever you need with it. 
 
 == Copyright
 
