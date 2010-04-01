@@ -6,23 +6,22 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "dirty-memoize"
     gem.summary = %Q{Memoize like object, with dirty setters}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.description = %Q{Works like Memoize [http://raa.ruby-lang.org/project/memoize/http://raa.ruby-lang.org/project/memoize/], but with a global cache. Thats allows to delete all cache when you use #clean() or call one of the methods specified on #dirty_writer }
     gem.email = "clbustos@gmail.com"
     gem.homepage = "http://github.com/clbustos/dirty-memoize"
     gem.authors = ["Claudio Bustos"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.add_development_dependency 'rspec'
+    gem.add_development_dependency 'jeweler'
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
 end
 
-require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+require 'spec/rake/spectask'
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
 end
 
 begin
@@ -38,9 +37,9 @@ rescue LoadError
   end
 end
 
-task :test => :check_dependencies
+task :spec => :check_dependencies
 
-task :default => :test
+task :default => :spec
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
