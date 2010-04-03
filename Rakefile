@@ -19,14 +19,17 @@ rescue LoadError
 end
 
 require 'spec/rake/spectask'
+
 Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs << 'lib' << 'spec'
   spec.spec_files = FileList['spec/**/*_spec.rb']
+  spec.rcov=true
+  spec.rcov_opts=['--exclude','spec']
 end
 
 begin
   require 'rcov/rcovtask'
-  Rcov::RcovTask.new do |test|
+  Rcov::RcovTask.new(:rcov) do |test|
     test.libs << 'test'
     test.pattern = 'test/**/test_*.rb'
     test.verbose = true

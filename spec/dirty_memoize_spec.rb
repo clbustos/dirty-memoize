@@ -42,42 +42,42 @@ describe DirtyMemoize, "extended object" do
   before(:each) do
     @ec=ExpensiveClass.new
   end
-  it "should initialize with dirty? to true" do 
-    @ec.dirty?.should==true
+  subject { @ec }
+  context "when instanciated" do 
+	  it { should be_dirty}
+	  it "should initialize with number of computation to 0" do
+		@ec.compute_count.should==0
+	  end
+	  it "read inmediatly the correct value" do
+		@ec.a=='x'
+	end
   end
-  it "should initialize with number of computation to 0" do
-    @ec.compute_count.should==0
-  end
-  describe "reads 'dirty' attributes " do
+  context "when reads 'dirty' attributes " do
     before(:each) do
       @ec.a
     end
-    it "#compute is called" do
-      @ec.compute_called?.should==true
-    end
-    it 'compute_count set to 1' do
+    it {should be_compute_called} 
+
+	it '#compute_count set to 1' do
       @ec.compute_count.should==1
-    end
-    it 'dirty? set to false' do
-      @ec.dirty?.should==false
-    end
+	end
+  
+	it{ should_not be_dirty}
+    
     it "compute_count doesn't change with multiple calls" do
       5.times {@ec.a}
       @ec.compute_count.should==1
     end
   end
-  describe "calls dirty writers before dirty getter" do
+  context "calls dirty writers before dirty getter" do
     before(:each) do
       @ec.x="cache"
     end
-    it 'set dirty? to true' do
-      @ec.dirty?.should==true
-    end
-    it "doesn't call compute" do
-      @ec.compute_called?.should==false
-    end
+	it { should be_dirty}
+	it { should_not be_compute_called}
+
     it "doesn't change dirty getters" do
-      @ec.instance_variable_get("@a").nil?.should==true
+      @ec.instance_variable_get("@a").should be_nil
     end
   end
   
@@ -86,14 +86,12 @@ describe DirtyMemoize, "extended object" do
       @ec.x="cache"
       @ec.a
     end
-    it 'set dirty? to false' do
-      @ec.dirty?.should==false
-    end    
+	specify { @ec.should_not be_dirty}
     it "calls compute, only once" do
       @ec.compute_called?.should==true
       @ec.compute_count.should==1      
     end
-    it "set value or internal variable" do
+    it "set value of internal variable" do
       @ec.instance_variable_get("@a").should=='cache'
     end
     it 'set getter method with a different value' do
@@ -106,15 +104,20 @@ describe DirtyMemoize, "extended object" do
       @ec.a
       @ec.set_a('not_cache')
     end
-    it "so changing internal variables  doesn't produce external changes" do 
+    it "can change internal variables" do 
       @ec.instance_variable_get("@a").should=='not_cache'
+  end
+    it "shouldn't compute new values" do 
       @ec.compute_count.should==1
+  end
+    it {should_not be_dirty}
+    it "doesn't change cache value" do
       @ec.a.should=='@a=cache'
-    end
+	end
+   
     it "so deleting it implies calculate all again" do
-      @ec.dirty?.should==false
       @ec.clean_cache
-      @ec.dirty?.should==true
+      @ec.should be_dirty
       @ec.compute_count.should==1
       @ec.a.should=='@a=cache'
       @ec.compute_count.should==2
