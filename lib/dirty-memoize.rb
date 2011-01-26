@@ -39,10 +39,10 @@ module DirtyMemoize
     def dirty_writer(*independent)
       independent.each do |sym|
         sym=sym.to_s+"="
-        alias_method((sym.to_s+"_whitout_dirty").intern, sym)
+        alias_method((sym.to_s+"_without_dirty").intern, sym)
         define_method(sym) do |*args|
           @dirty=:true
-          send(sym.to_s+"_whitout_dirty", *args)
+          send(sym.to_s+"_without_dirty", *args)
         end
       end
     end

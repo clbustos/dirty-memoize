@@ -8,7 +8,7 @@ Like Memoize, but designed for mutable and parametizable objects
 
 Use when: 
 1. You have one expensive method (\compute) which set many internal
-variables. So, is preferable lazy evaluation of these dependent variables.
+   variables. So, is preferable lazy evaluation of these dependent variables.
 2. The expensive operation depends on one or more parameters
 3. Changes on one or more parameters affect all dependent variables
 4. You may want to hide the call of 'compute' operation
@@ -21,18 +21,39 @@ Set constant DIRTY_COMPUTE to the name of other method if you need it
 
 Example:
  
-  class ExpensiveCalculation
-   include DirtyMemoize
-   attr_reader :a
-   attr_accesor :x
-   # Your evil function
-   def compute
-     @a=x**x**x
-   end
-  end
-  a=new ExpensiveCalculation
-  a.x=1
-  puts a.a
+    require 'dirty-memoize'
+    
+    class Factorial
+    include DirtyMemoize
+    attr_reader :result
+    attr_writer :n
+    dirty_memoize :result
+    dirty_writer :n
+    
+    def initialize
+    @n=nil
+    @result=nil
+    end
+    def fact(n)
+    return 1 if n==1
+    n*(fact(n-1))
+    end
+    def compute
+    puts "Computing the factorial!"
+    @result=fact(@n)
+    end
+    end
+    
+    a=Factorial.new
+    a.n=10
+    puts "Our object is dirty: #{a.dirty?}"
+    puts "The result is: #{a.result}"
+    puts "Our object is no longer dirty: #{a.dirty?}"
+    puts "And the result is cached without calling the compute method: #{a.result}"
+    puts "Now, n is changed to 5"
+    a.n=5
+    # Object is now dirty. So, compute will be called when we get result
+    puts "The result is: #{a.result}"
 
 == Sugestions
 
