@@ -2,7 +2,7 @@
 
 * http://github.com/clbustos/dirty-memoize
 
-==DESCRIPTION 
+== DESCRIPTION 
 
 Like Memoize, but designed for mutable and parametizable objects
 
