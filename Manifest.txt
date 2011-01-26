@@ -1,0 +1,12 @@
+.document
+LICENSE
+LICENSE.txt
+Manifest.txt
+README.rdoc
+README.txt
+Rakefile
+VERSION
+lib/dirty-memoize.rb
+spec/dirty_memoize_spec.rb
+spec/spec.opts
+spec/spec_helper.rb

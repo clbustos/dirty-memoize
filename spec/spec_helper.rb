@@ -1,12 +1,15 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'dirty-memoize.rb'
-require 'spec'
-require 'spec/autorun'
-
-Spec::Runner.configure do |config|
-  
+$:.unshift(File.dirname(__FILE__)+"/../lib")
+begin
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter "/spec/"
+    add_group "Libraries", "lib"
+  end
+rescue LoadError
 end
+require 'rspec'
+require 'dirty-memoize.rb'
+
 
 class String
   def deindent

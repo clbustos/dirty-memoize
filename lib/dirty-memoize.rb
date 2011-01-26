@@ -29,6 +29,7 @@
 #  puts ExpensiveCalculation.new(1,2).a
 
 module DirtyMemoize
+  VERSION="0.0.4"
   # Trick from http://github.com/ecomba/memoizable
   def self.included(receiver) #:nodoc:
     receiver.extend DirtyMemoize::ClassMethods
@@ -49,7 +50,7 @@ module DirtyMemoize
     def dirty_memoize(*dependent)
       dependent.each do |sym|
         alias_method((sym.to_s+"_without_dirty").intern, sym)
-        define_method(sym) {|*args|
+        define_method(sym) do |*args|
           if(dirty?)
             clean_cache
             if self.class.const_defined? "DIRTY_COMPUTE"
@@ -63,7 +64,7 @@ module DirtyMemoize
           end
           @cache[sym]||=Hash.new
           @cache[sym][args]||=send(sym.to_s+"_without_dirty", *args)
-        }
+        end
       end
     end
   end # end of ClassMethods

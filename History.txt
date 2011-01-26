@@ -1,0 +1,3 @@
+=== 0.0.4 / 2011-01-26
+* Better specs
+* Build managed with Hoe
