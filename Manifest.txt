@@ -1,11 +1,10 @@
-.document
-LICENSE
+History.txt
 LICENSE.txt
 Manifest.txt
-README.rdoc
 README.txt
 Rakefile
-VERSION
+examples/only_reader.rb
+examples/reader_and_writer.rb
 lib/dirty-memoize.rb
 spec/dirty_memoize_spec.rb
 spec/spec.opts
